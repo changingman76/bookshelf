@@ -1,0 +1,18 @@
+<!-- filepath: /home/csiebel/dev/Ruby/Rails/bookshelf/app/views/books/show.html.erb -->
+<div class="centered-title">
+  <h1><%= @book.title %></h1>
+</div>
+
+<div class="book-card new-book-card" style="text-align: right;">
+  <p><strong>Autor:</strong> <%= @book.author %></p>
+  <p><strong>Beschreibung:</strong> <%= @book.description %></p>
+  <p><strong>Standort:</strong> <%= @book.location %></p>
+  <p><strong>ISBN:</strong> <%= @book.isbn %></p>
+  <% if @book.published_on %>
+    <p><strong>Erschienen am:</strong> <%= @book.published_on %></p>
+  <% end %>
+</div>
+
+<div class="card-back-link">
+  <%= link_to 'Zurück zur Liste', books_list_path %>
+</div>

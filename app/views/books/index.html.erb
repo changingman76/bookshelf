@@ -1,0 +1,32 @@
+<div class="page-content">
+  <h1>Alle Bücher</h1>
+
+  <%= form_with url: books_path, method: :get, local: true, class: "search-form" do %>
+    <input type="text" name="q" value="<%= params[:q] %>" placeholder="Suche nach Titel, Autor oder Inhalt..." class="form-control" />
+    <button type="submit" class="btn btn-primary">Suchen</button>
+  <% end %>
+
+  <div class="books-list">
+    <% @books.each_with_index do |book, i| %>
+      <div class="book-card <%= i.even? ? 'even' : 'odd' %> book-row">
+        <div class="book-info">
+          <h2><%= book.title %></h2>
+          <p><strong>Autor:</strong> <%= book.author %></p>
+          <p><strong>Beschreibung:</strong> <%= book.description %></p>
+          <p><strong>Standort:</strong> <%= book.location %></p>
+          <% if book.published_on %>
+            <p><strong>Erschienen am:</strong> <%= book.published_on %></p>
+          <% end %>
+        </div>
+        <div class="book-actions">
+          <%= link_to 'Ändern', edit_book_path(book), class: 'btn btn-warning' %>
+          <%= link_to 'Anzeigen', book_path(book), class: 'btn btn-success' %>
+          <%= link_to 'Löschen', book_path(book), method: :delete, data: { confirm: 'Bist du sicher?' }, class: 'btn btn-danger' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Entferne oder kommentiere die Zeile mit dem Link 'neues Buch' %>
+<%#= link_to 'Neues Buch', new_book_path %>
