@@ -3,14 +3,45 @@
   <h1><%= @book.title %></h1>
 </div>
 
-<div class="book-card new-book-card" style="text-align: right;">
-  <p><strong>Autor:</strong> <%= @book.author %></p>
-  <p><strong>Beschreibung:</strong> <%= @book.description %></p>
-  <p><strong>Standort:</strong> <%= @book.location %></p>
-  <p><strong>ISBN:</strong> <%= @book.isbn %></p>
-  <% if @book.published_on %>
-    <p><strong>Erschienen am:</strong> <%= @book.published_on %></p>
-  <% end %>
+<div class="book-card new-book-card" style="display: flex; flex-direction: column; gap: 1em; padding: 2em; max-width: 700px; margin: 0 auto;">
+  <div style="display: flex; flex-direction: row; gap: 2em; align-items: flex-start;">
+    <!-- Cover-Card (links) -->
+    <div style="width: 140px; min-width: 120px; height: 210px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <% if @book.respond_to?(:cover_url) && @book.cover_url.present? %>
+        <img src="<%= @book.cover_url %>" alt="Buchcover" style="width: 100%; height: 100%; object-fit: cover;" />
+      <% else %>
+        <span style="color: #888; font-size: 0.95em;">Kein Cover</span>
+      <% end %>
+    </div>
+    <!-- Info-Card (rechts) -->
+    <div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 1.7em;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <span style="text-align: left; min-width: 90px;"><strong>Autor:</strong></span>
+        <span style="text-align: right; margin-left: 0.5em;"><%= @book.author %></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <span style="text-align: left; min-width: 90px;"><strong>Standort:</strong></span>
+        <span style="text-align: right; margin-left: 0.5em;"><%= @book.location %></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <span style="text-align: left; min-width: 90px;"><strong>ISBN:</strong></span>
+        <span style="text-align: right; margin-left: 0.5em;"><%= @book.isbn %></span>
+      </div>
+      <% if @book.published_on %>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <span style="text-align: left; min-width: 90px;"><strong>Erschienen am:</strong></span>
+          <span style="text-align: right; margin-left: 0.5em;"><%= @book.published_on %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <!-- Inhalt (unten, über gesamte Breite) -->
+  <div style="margin-top: 2em; border-top: 1px solid #ddd; padding-top: 1.2em;">
+    <div style="display: flex; justify-content: space-between;">
+      <span style="text-align: left;"><strong>Inhalt:</strong></span>
+      <span style="text-align: right;"><%= @book.description %></span>
+    </div>
+  </div>
 </div>
 
 <div class="card-back-link">

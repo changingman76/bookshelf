@@ -1,4 +1,9 @@
+require 'net/http'
+require 'json'
+
 class BooksController < ApplicationController
+  before_action :require_login
+
   def index
     redirect_to books_list_path
   end
@@ -59,9 +64,29 @@ class BooksController < ApplicationController
     end
   end
 
+  def fetch_vlb
+    isbn = params[:isbn]
+    # Beispiel-API-URL, bitte ggf. anpassen!
+    url = URI("https://api.buchhandel.de/v1/isbn/#{isbn}")
+    response = Net::HTTP.get_response(url)
+    if response.is_a?(Net::HTTPSuccess)
+      data = JSON.parse(response.body)
+      # Passe die Zuordnung an die tatsächliche API-Struktur an!
+      render json: {
+        title: data["title"],
+        author: data["author"],
+        description: data["description"],
+        published_on: data["publishedDate"],
+        cover_url: data["coverUrl"]
+      }
+    else
+      render json: { error: "Keine Daten gefunden" }, status: :not_found
+    end
+  end
+
   private
 
   def book_params
-    params.require(:book).permit(:title, :author, :description, :published_on)
+    params.require(:book).permit(:title, :author, :description, :location, :isbn, :borrowed, :published_on)
   end
 end

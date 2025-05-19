@@ -1,4 +1,11 @@
 <div class="page-content">
+  <% unless logged_in? %>
+    <div class="login-container">
+      <%= render "sessions/new" %>
+    </div>
+    <% return %>
+  <% end %>
+
   <%= form_with url: books_list_path, method: :get, local: true, class: "search-form" do %>
     <input type="text" name="q" value="<%= params[:q] %>" placeholder="Suche nach Titel, Autor, Inhalt oder Standort..." class="form-control" />
     <button type="submit" class="btn btn-primary">Suchen</button>
@@ -7,6 +14,7 @@
   <table class="books-table">
     <thead>
       <tr>
+        <th class="col-cover"></th>
         <th class="col-title">Titel</th>
         <th class="col-author">Autor</th>
         <th class="col-location">Standort</th>
@@ -17,6 +25,15 @@
     <tbody>
       <% @books.each do |book| %>
         <tr>
+          <td>
+            <% if book.respond_to?(:cover_url) && book.cover_url.present? %>
+              <img src="<%= book.cover_url %>" alt="Cover" style="width: 48px; height: 64px; object-fit: cover; border-radius: 4px;" />
+            <% else %>
+              <div style="width: 48px; height: 64px; background: #e0e0e0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.8em;">
+                Kein<br>Cover
+              </div>
+            <% end %>
+          </td>
           <td><%= book.title %></td>
           <td><%= book.author %></td>
           <td><%= book.location %></td>
@@ -31,7 +48,7 @@
             <div class="table-actions">
               <%= link_to '✏️', edit_book_path(book), class: 'btn btn-warning btn-xs', title: 'Ändern' %>
               <%= link_to '👁️', book_path(book), class: 'btn btn-success btn-xs', title: 'Anzeigen' %>
-              <%= link_to '🗑️', book_path(book), method: :delete, data: { confirm: 'Möchtest du dieses Buch wirklich löschen?' }, class: 'btn btn-danger btn-xs', title: 'Löschen' %>
+              <%= link_to '🗑️', book_path(book), method: :delete, data: { turbo: false, confirm: 'Möchten Sie den Titel wirklich löschen?' }, class: 'btn btn-danger btn-xs', title: 'Löschen' %>
             </div>
           </td>
         </tr>

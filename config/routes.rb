@@ -14,5 +14,10 @@ Rails.application.routes.draw do
 
   resources :books, except: [:index]
   get 'books_list', to: 'books#list', as: 'books_list'
-  root to: 'books#list'
+  get 'books/fetch_vlb', to: 'books#fetch_vlb'
+  root to: 'sessions#new'
+
+  get "login", to: "sessions#login"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
 end

@@ -38,9 +38,44 @@
 
     <div class="form-group">
       <%= form.label :isbn, "ISBN" %>
-      <%= form.text_field :isbn, class: "form-control" %>
+      <%= form.text_field :isbn, class: "form-control", id: "isbn-field" %>
+      <button type="button" id="fetch-vlb-btn" class="btn btn-secondary" style="margin-left: 1em;">Daten automatisch ausfüllen</button>
     </div>
-    
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const btn = document.getElementById("fetch-vlb-btn");
+        btn.addEventListener("click", function() {
+          const isbn = document.getElementById("isbn-field").value;
+          if (!isbn) return;
+          fetch(`/books/fetch_vlb?isbn=${encodeURIComponent(isbn)}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.error) {
+                alert(data.error);
+                return;
+              }
+              if (data.title) document.getElementById("book_title").value = data.title;
+              if (data.author) document.getElementById("book_author").value = data.author;
+              if (data.description) document.getElementById("book_description").value = data.description;
+              if (data.published_on) document.getElementById("book_published_on").value = data.published_on;
+              if (data.cover_url) {
+                // Optional: Zeige das Cover im Formular an, falls gewünscht
+                let cover = document.getElementById("cover-preview");
+                if (!cover) {
+                  cover = document.createElement("img");
+                  cover.id = "cover-preview";
+                  cover.style.maxWidth = "200px";
+                  cover.style.display = "block";
+                  cover.style.marginTop = "1em";
+                  document.getElementById("isbn-field").parentNode.appendChild(cover);
+                }
+                cover.src = data.cover_url;
+              }
+            });
+        });
+      });
+    </script>
+
     <div class="form-group">
       <%= form.label :published_on, "Anlagedatum" %>
       <%= form.text_field :published_on, value: Date.today.strftime("%Y-%m-%d"), class: "form-control", type: "date" %>
